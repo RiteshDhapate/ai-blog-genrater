@@ -18,7 +18,7 @@ app.get("/", (req, res) => {
   res.send("Welcome to the Inspirational Quote Generator!");
 });
 
-app.post("/generate-quote-image", async (req, res) => {
+app.post("/generate-blog", async (req, res) => {
   try {
     console.log(req.body);
     const { title } = req.body;
