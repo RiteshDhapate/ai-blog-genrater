@@ -29,11 +29,11 @@ app.post("/generate-quote-image", async (req, res) => {
     // console.log("Generated quote:", quote);
 
     console.log("Final image path:", imageUrl);
-    // const blog = new Blog({
-    //   data,
-    //   imageUrl, // This will return the path to the saved image
-    // });
-    // await blog.save();
+    const blog = new Blog({
+      data,
+      imageUrl, // This will return the path to the saved image
+    });
+    await blog.save();
     res.json({
       data,
       imageUrl, // This will return the path to the saved image
