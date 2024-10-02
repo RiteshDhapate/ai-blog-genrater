@@ -1,112 +1,119 @@
-# Quote Generator
+# Inspirational Blog Generator
 
-The project includes a simple Express server to generate quote images on request.
+This project is an Express.js server that generates inspirational blog posts with AI-generated images. It uses MongoDB for data storage and Cloudinary for image hosting.
 
-## Route
+## Features
 
-- GET /generate-quote-image: Generates an image, creates a quote and based on the quote generates a message and subject, Also adds the quote to the image, and uploads it to Cloudinary.
+- Generate blog posts with AI-generated titles, subtitles, content, and images
+- Store generated blog posts in MongoDB
+- Retrieve paginated list of blog posts
+- Cloudinary integration for image hosting
 
-```javascript
-app.get("/generate-quote-image", async (req, res) => {
-  try {
-    const imageUrl = await generateImage();
-    console.log("Generated image URL:", imageUrl);
-    const quote = await generateQuoteFromImage(imageUrl);
-    console.log("Generated quote:", quote);
-    const finalImagePath = await addTextToImage(
-      imageUrl,
-      quote,
-      "public/logo_placeholder.svg"
-    );
-    console.log("Final image path:", finalImagePath);
+## Prerequisites
 
-    const cloudinaryResponse = await uploadOnCloudinary(finalImagePath);
+Before you begin, ensure you have met the following requirements:
 
-    if (!cloudinaryResponse) {
-      return res
-        .status(500)
-        .json({ error: "Failed to upload image to Cloudinary." });
-    }
+- Node.js installed (version 14 or higher recommended)
+- MongoDB installed and running
+- Cloudinary account for image hosting
+- OpenAI API key for content generation
 
-    res.json({
-      quote,
-      cloudinaryResponse, // This will return the path to the saved image
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+## server
+deplyed server URL
+```curl
+https://ai-blog-genrater.onrender.com
+```
+
+## Installation
+
+1. Clone the repository:
+   ```
+   git clone https://github.com/RiteshDhapate/ai-blog-genrater.git
+   cd ai-blog-genrater
+   ```
+
+2. Install dependencies:
+   ```
+   npm install
+   ```
+
+3. Create a `.env` file in the root directory and add the following environment variables:
+   ```
+   PORT=3001
+   MONGO_URL=your_mongodb_connection_string
+   CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+   CLOUDINARY_API_KEY=your_cloudinary_api_key
+   CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+   OPENAI_API_KEY=your_openai_api_key
+   ```
+
+## Usage
+
+1. Start the server:
+   ```
+   npm start
+   ```
+
+2. The server will be running at `http://localhost:3001` (or the port specified in your .env file).
+
+## API Endpoints
+
+### Generate a Blog Post
+
+- **URL**: `/generate-blog`
+- **Method**: `POST`
+- **Body**:
+  ```json
+  {
+    "title": "Your inspirational topic"
   }
-});
+  ```
+- **Response**: Returns the generated blog post data and image URL.
+
+### Get Blog Posts
+
+- **URL**: `/blogs`
+- **Method**: `GET`
+- **Query Parameters**:
+  - `page` (optional): Page number for pagination (default: 1)
+  - `limit` (optional): Number of blogs per page (default: 10)
+- **Response**: Returns a paginated list of blog posts.
+
+## Example Usage
+
+### Generating a Blog Post
+
+```bash
+curl -X POST http://localhost:3001/generate-blog \
+     -H "Content-Type: application/json" \
+     -d '{"title": "Overcoming Challenges"}'
 ```
 
-## Functions
+### Retrieving Blog Posts
 
-## Image Generation Functions
-
-### `generateImage()`
-
-Generates a random image based on predefined prompts.
-
-**Returns:** `Promise<string>` - The URL of the generated image.
-
-[go to code](utils/generateQuote.js#generateImage)
-
-### `generateQuoteFromImage(imageUrl)`
-
-Generates an inspirational quote based on the provided image URL.
-
-**Parameters:**
-
-- `imageUrl` - The URL of the image to generate a quote from.
-
-**Returns:** `Promise<string>` - The generated quote.
-
-[go to code](utils/generateQuote.js#generateQuoteFromImage)
-
-### `addTextToImage(imageUrl, text, logoPath)`
-
-Adds text and a logo to the specified image, saving the result as a new image.
-
-**Parameters:**
-
-- `imageUrl` - The URL of the image.
-- `text` - The text to overlay on the image.
-- `logoPath` - The path to the logo image.
-
-**Returns:** `Promise<string>` - The path of the saved image with the text and logo.
-
-[go to code](utils/generateQuote.js#addTextToimage)
-
-## Cloudinary Functions
-
-### `uploadOnCloudinary(localFilePath)`
-
-Uploads an image to Cloudinary.
-
-**Parameters:**
-
-- `localFilePath` - The path to the local image file.
-
-**Returns:** `Promise<object | null>` - The Cloudinary response containing image details, or null on failure.
-
-[go to code](utils/cloudinary.js#uploadOnCloudinary)
-
-### `deleteOnCloudinary(publicId)`
-
-Deletes an image from Cloudinary.
-
-**Parameters:**
-
-- `publicId` - The public ID of the image to delete.
-
-**Returns:** `Promise<object>` - The Cloudinary response.
-
-[go to code](utils/cloudinary.js#deleteOnCloudinary)
-
-## Environment Variables
-
-```plaintext
-OPENAI_API_KEY: Your OpenAI API key.
-CLOUD_NAME: Your Cloudinary cloud name.
-CLOUD_API_KEY: Your Cloudinary API key.
-CLOUD_API_SECRET: Your Cloudinary API secret.
+```bash
+curl http://localhost:3001/blogs?page=1&limit=5
 ```
+
+## Contributing
+
+Contributions to the Inspirational Blog Generator are welcome. Please follow these steps:
+
+1. Fork the repository
+2. Create a new branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a pull request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+
+## Acknowledgements
+
+- Express.js
+- MongoDB
+- Mongoose
+- Cloudinary
+- OpenAI
+- Dotenv

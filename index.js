@@ -15,7 +15,7 @@ app.use(express.static("public"));
 
 // Routes
 app.get("/", (req, res) => {
-  res.send("Welcome to the Inspirational Quote Generator!");
+  res.send("Welcome to the Inspirational Blog Generator!");
 });
 
 app.post("/generate-blog", async (req, res) => {

@@ -28,12 +28,9 @@ const getRandomTitle = () => {
 // Function to send POST request
 const sendPostRequest = async (title) => {
   try {
-    const response = await axios.post(
-      "http://localhost:3001/generate-quote-image",
-      {
-        title: title,
-      }
-    );
+    const response = await axios.post("http://localhost:3001/generate-blog", {
+      title: title,
+    });
     console.log(`Success: ${title}`, response.data);
   } catch (error) {
     console.error(`Error for title: ${title}`, error.message);
